@@ -1,9 +1,7 @@
 import {
   Body,
   Controller,
-  Param,
   Post,
-  Req,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -29,11 +27,5 @@ export class AuthController {
     @Body(ValidationPipe) authCredentialDto: AuthCredentialDto,
   ): Promise<{ accessToken: string }> {
     return this.authService.signIn(authCredentialDto);
-  }
-
-  @Post('/test')
-  @UseGuards(AuthGuard())
-  test(@GetUser() user: User) {
-    console.log('user', user);
   }
 }
