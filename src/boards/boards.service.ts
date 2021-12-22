@@ -63,8 +63,8 @@ export class BoardsService {
   // remove는 삭제하려고 하는 객체가 무조건 database에 존재해야 한다 안그러면 404 Error가 뜬다
   // delete는 객체가 존재하면 지우고 없으면 아무런 영향이 없다
   // remove는 먼저 객체를 찾고 지워야 하기 때문에 데이터베이스를 두 번 찍게 된다(따라서 delete를 사용)
-  async deleteBoard(id: number): Promise<void> {
-    const result = await this.boardRepository.delete(id);
+  async deleteBoard(id: number, user: User): Promise<void> {
+    const result = await this.boardRepository.delete({ id, user });
 
     if (result.affected === 0) {
       throw new NotFoundException(`Can't find Board with id ${id}`);
