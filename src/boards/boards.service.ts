@@ -12,19 +12,23 @@ export class BoardsService {
     private boardRepository: BoardRepository,
   ) {}
 
-  // getBoardById 에서는 typeORM 의 findOne 이라는 메소드를 사용할건데 이 부분을 async await을 사용해서 처리한다 type은 Promise이다
-  async getBoardById(id: number): Promise<Board> {
-    const found = await this.boardRepository.findOne(id);
-
-    if (!found) {
-      throw new NotFoundException(`Can't find Board with id ${id}`);
-    }
-
-    return found;
-  }
   // getAllBoards(): Board[] {
   //   return this.boards;
   // }
+
+  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    const { title, description } = createBoardDto;
+
+    const board = this.boardRepository.create({
+      title,
+      description,
+      status: BoardStatus.PUBLIC,
+    });
+
+    await this.boardRepository.save(board);
+    return board;
+  }
+
   // createBoard(createBoardDto: CreateBoardDto) {
   //   const { title, description } = createBoardDto;
   //   const board: Board = {
@@ -36,6 +40,17 @@ export class BoardsService {
   //   this.boards.push(board);
   //   return board;
   // }
+
+  // getBoardById 에서는 typeORM 의 findOne 이라는 메소드를 사용할건데 이 부분을 async await을 사용해서 처리한다 type은 Promise이다
+  async getBoardById(id: number): Promise<Board> {
+    const found = await this.boardRepository.findOne(id);
+
+    if (!found) {
+      throw new NotFoundException(`Can't find Board with id ${id}`);
+    }
+
+    return found;
+  }
   // getBoardById(id: string): Board {
   //   const found = this.boards.find((board) => board.id === id);
   //   if (!found) {
