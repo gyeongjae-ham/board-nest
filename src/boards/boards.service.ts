@@ -1,10 +1,27 @@
 import { Get, Injectable, NotFoundException } from '@nestjs/common';
 import { BoardStatus } from './board-status.enum';
-import { v1 as uuid } from 'uuid';
 import { CreateBoardDto } from './dto/create-board.dto';
+import { BoardRepository } from './board.repository';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Board } from './board.entity';
 
 @Injectable()
 export class BoardsService {
+  constructor(
+    @InjectRepository(BoardRepository)
+    private boardRepository: BoardRepository,
+  ) {}
+
+  // getBoardById 에서는 typeORM 의 findOne 이라는 메소드를 사용할건데 이 부분을 async await을 사용해서 처리한다 type은 Promise이다
+  async getBoardById(id: number): Promise<Board> {
+    const found = await this.boardRepository.findOne(id);
+
+    if (!found) {
+      throw new NotFoundException(`Can't find Board with id ${id}`);
+    }
+
+    return found;
+  }
   // getAllBoards(): Board[] {
   //   return this.boards;
   // }
