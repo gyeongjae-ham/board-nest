@@ -1,0 +1,8 @@
+db:
+  host: 'localhost'
+  username: 'root'
+  password: 'mslfl4861!!'
+  synchronize: true
+
+jwt:
+  secret: 'Secret123'
