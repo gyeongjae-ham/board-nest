@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   ParseIntPipe,
   Patch,
@@ -24,10 +25,12 @@ import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe'
 // Controller level에서 token을 가져와서 유저를 인증하면 이 Controller 안의 모든 handler들은 영향을 받으므로 이렇게 해준다
 @UseGuards(AuthGuard())
 export class BoardsController {
+  private logger = new Logger('BoardsController');
   constructor(private boardsService: BoardsService) {}
 
   @Get()
   getAllBoard(@GetUser() user: User): Promise<Board[]> {
+    this.logger.verbose(`User ${user.username} trying to get all boards`);
     return this.boardsService.getAllBoards(user);
   }
   // @Get('/')
@@ -41,6 +44,11 @@ export class BoardsController {
     @Body() createBoardDto: CreateBoardDto,
     @GetUser() user: User,
   ): Promise<Board> {
+    this.logger.verbose(
+      `User ${user.username} creating a new board. Payload: ${JSON.stringify(
+        createBoardDto,
+      )}`,
+    );
     return this.boardsService.createBoard(createBoardDto, user);
   }
   // @Post()
